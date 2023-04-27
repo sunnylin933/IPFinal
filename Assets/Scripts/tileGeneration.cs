@@ -35,22 +35,18 @@ public class tileGeneration : MonoBehaviour
         {
             case 0:
                 //North
-                print("North detected");
                 CheckStatus(northSpawns);
                 break;
             case 1:
                 //East
-                print("East detected");
                 CheckStatus(eastSpawns);
                 break;
             case 2:
                 //South
-                print("South detected");
                 CheckStatus(southSpawns);
                 break;
             case 3:
                 //West
-                print("West detected");
                 CheckStatus(westSpawns);
                 break;
         }
@@ -63,8 +59,9 @@ public class tileGeneration : MonoBehaviour
             Collider[] hitColliders = Physics.OverlapBox(spawn.transform.position, transform.localScale * 2, Quaternion.identity, gLayer);
             if(hitColliders.Length == 0) 
             {
-                var ground = Instantiate(cityPrefabs[0]);
+                var ground = Instantiate(cityPrefabs[UnityEngine.Random.Range(0,cityPrefabs.Length)]);
                 ground.transform.position = spawn.transform.position;
+                ground.name = "Ground";
             }
         }
     }
