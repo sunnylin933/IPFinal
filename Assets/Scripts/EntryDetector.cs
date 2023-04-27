@@ -9,7 +9,7 @@ public class EntryDetector : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            this.transform.parent.GetComponent<tileGeneration>().DetectSpawn(ID);
+            this.transform.parent.transform.parent.GetComponent<tileGeneration>().DetectSpawn(ID);
         }
     }
 }

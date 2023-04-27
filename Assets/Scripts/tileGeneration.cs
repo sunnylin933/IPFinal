@@ -22,7 +22,7 @@ public class tileGeneration : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(Vector3.Distance(transform.position, player.transform.position) > 500f)
+        if(Vector3.Distance(transform.position, player.transform.position) > 350f)
         {
             Destroy(gameObject);
         }
