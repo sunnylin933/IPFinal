@@ -6,7 +6,9 @@ using UnityEngine;
 public class PoliceCarAI : MonoBehaviour
 {
     [SerializeField] Transform playerCar;
-    [SerializeField] float moveSpeed;
+    [SerializeField] float maxFwdSpeed = 150f;
+    [SerializeField] float fwdSpeed = 0f;
+    [SerializeField] float fwdAccel = 150f;
     [SerializeField] float rotationSpeed;
     bool backingUp = false;
     [SerializeField] float backingUpTime;
@@ -37,7 +39,31 @@ public class PoliceCarAI : MonoBehaviour
             {
                 backingUpTimer += Time.deltaTime;
                 transform.Rotate(Vector3.up, Space.World);
+                if (fwdSpeed > 0)
+                {
+                    fwdSpeed = 0;
+                }
 
+                if (fwdSpeed >= -maxFwdSpeed)
+                {
+                    fwdSpeed -= Time.deltaTime * fwdAccel;
+                }
+            }
+        }
+        else
+        {
+            if (fwdSpeed < 0)
+            {
+                fwdSpeed = 0;
+            }
+
+            if (fwdSpeed < maxFwdSpeed)
+            {
+                fwdSpeed += Time.deltaTime * fwdAccel;
+            }
+            else
+            {
+                fwdSpeed = maxFwdSpeed;
             }
         }
 
@@ -46,11 +72,11 @@ public class PoliceCarAI : MonoBehaviour
     {
         if(backingUp)
         {
-            rb.AddForce(-transform.forward * (moveSpeed * 0.1f), ForceMode.Acceleration);
+            rb.AddForce(-transform.forward * (fwdSpeed * 0.1f), ForceMode.Acceleration);
         }
         else
         {
-            rb.AddForce(transform.forward * moveSpeed, ForceMode.Acceleration);
+            rb.AddForce(transform.forward * fwdSpeed, ForceMode.Acceleration);
         }
     }
 

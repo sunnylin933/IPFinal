@@ -21,7 +21,7 @@ public class WheelController : MonoBehaviour
 
         foreach (var wheel in wheels) 
         {
-            wheel.transform.Rotate(Time.deltaTime * CarScript.instance.moveBase * rotationSpeed, 0, 0, Space.Self);
+            wheel.transform.Rotate(Time.deltaTime * rotationSpeed, 0, 0, Space.Self);
         }
 
         if(horizontalAxis > 0)

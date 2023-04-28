@@ -7,6 +7,7 @@ public class CarScript : MonoBehaviour
 {
     public static CarScript instance;
 
+    [Header("Movement")]
     public Rigidbody sphereRB;
     public Rigidbody carRB;
 
@@ -25,6 +26,10 @@ public class CarScript : MonoBehaviour
     public float modifiedDrag;
     public float alignToGroundTime;
     public float turnModifier;
+
+    [Header("Status Checks")]
+    public float timePinned;
+    public float pinMax;
 
     // Start is called before the first frame update
     private void Awake()
@@ -110,6 +115,17 @@ public class CarScript : MonoBehaviour
             moveInput *= 0.85f;
         }
         sphereRB.drag = isGrounded ? normalDrag : modifiedDrag;
+
+
+        ///Scoring
+        if (Vector3.Distance(sphereRB.velocity, Vector3.zero) < 0.1f)
+        {
+            timePinned += Time.deltaTime;
+        }
+        else
+        {
+            if(timePinned > 0) timePinned = 0;
+        }
     }
 
     private void FixedUpdate()

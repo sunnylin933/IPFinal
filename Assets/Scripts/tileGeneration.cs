@@ -12,14 +12,14 @@ public class tileGeneration : MonoBehaviour
     [SerializeField] GameObject[] southSpawns;
     [SerializeField] GameObject[] westSpawns;
     [SerializeField] GameObject[] cityPrefabs;
-    [SerializeField] Transform[] spawnPoints;
+    [SerializeField] GameObject[] spawnPoints;
     [SerializeField] LayerMask gLayer;
     GameObject player;
 
     private void Awake()
     {
         player = GameObject.Find("Player");
-        GameManager.instance.RecheckSpawns();
+        GameManager.instance.RecheckSpawns(spawnPoints);
     }
     // Start is called before the first frame update
     // Update is called once per frame
@@ -77,7 +77,7 @@ public class tileGeneration : MonoBehaviour
 
     private void OnDestroy()
     {
-        /*GameManager.instance.RecheckSpawnsDelayed();*/
+
     }
 
 }
