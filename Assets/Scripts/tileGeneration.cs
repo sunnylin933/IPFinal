@@ -1,7 +1,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class tileGeneration : MonoBehaviour
 {
@@ -10,15 +12,16 @@ public class tileGeneration : MonoBehaviour
     [SerializeField] GameObject[] southSpawns;
     [SerializeField] GameObject[] westSpawns;
     [SerializeField] GameObject[] cityPrefabs;
+    [SerializeField] Transform[] spawnPoints;
     [SerializeField] LayerMask gLayer;
     GameObject player;
 
-    // Start is called before the first frame update
-    void Start()
+    private void Awake()
     {
         player = GameObject.Find("Player");
+        GameManager.instance.RecheckSpawns();
     }
-
+    // Start is called before the first frame update
     // Update is called once per frame
     void Update()
     {
@@ -71,4 +74,10 @@ public class tileGeneration : MonoBehaviour
         Gizmos.color = Color.red;
         Gizmos.DrawWireCube(transform.position, transform.localScale);
     }
+
+    private void OnDestroy()
+    {
+        /*GameManager.instance.RecheckSpawnsDelayed();*/
+    }
+
 }

@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 5194663424843886783}
   - component: {fileID: 8067021796229530741}
   - component: {fileID: 3425926280106540081}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: gas_station_shop
   m_TagString: Untagged
   m_Icon: {fileID: 0}

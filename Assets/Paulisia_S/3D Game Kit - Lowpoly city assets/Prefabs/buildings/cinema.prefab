@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 6570272730594588106}
   - component: {fileID: 2673127839811504964}
   - component: {fileID: 8837320833207801936}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: cinema
   m_TagString: Untagged
   m_Icon: {fileID: 0}

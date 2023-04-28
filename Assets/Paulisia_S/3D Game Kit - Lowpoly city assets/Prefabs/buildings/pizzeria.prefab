@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 3259261578106251765}
   - component: {fileID: 783571819059404095}
   - component: {fileID: 7354352189585138683}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: pizzeria
   m_TagString: Untagged
   m_Icon: {fileID: 0}

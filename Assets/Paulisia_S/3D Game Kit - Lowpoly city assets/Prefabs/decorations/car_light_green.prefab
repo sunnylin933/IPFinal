@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 1882424794110016945}
   - component: {fileID: 4466234002910497147}
   - component: {fileID: -3275339640186414219}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: car_light_green
   m_TagString: Untagged
   m_Icon: {fileID: 0}

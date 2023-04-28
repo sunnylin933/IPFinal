@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 8255111734212325315}
   - component: {fileID: 6157822754385206025}
   - component: {fileID: -667972693263937129}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: bakery
   m_TagString: Untagged
   m_Icon: {fileID: 0}

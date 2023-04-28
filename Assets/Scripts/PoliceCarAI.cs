@@ -2,22 +2,59 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.UIElements;
 
 public class PoliceCarAI : MonoBehaviour
 {
+    [SerializeField] Transform playerCar;
+    [SerializeField] float moveSpeed;
+    [SerializeField] float rotationSpeed;
+    bool backingUp = false;
+    [SerializeField] float backingUpTime;
+    float backingUpTimer = 0f;
+    Rigidbody rb;
 
-    NavMeshAgent agent;
-    GameObject player;
-    // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
-        player = GameObject.Find("Player");
-        agent = GetComponent<NavMeshAgent>();
+        rb = GetComponent<Rigidbody>();
     }
 
-    // Update is called once per frame
-    void Update()
+    private void Update()
     {
-        agent.SetDestination(player.transform.position);
+        Vector3 targetDirection = (playerCar.position - transform.position).normalized;
+        Quaternion targetRotation = Quaternion.LookRotation(targetDirection);
+        transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+
+        if (backingUp)
+        {
+            if(backingUpTimer >= backingUpTime)
+            {
+                backingUpTimer = 0f;
+                backingUp = false;
+            }
+            else
+            {
+                backingUpTimer += Time.deltaTime;
+                transform.Rotate(Vector3.up, Space.World);
+            }
+        }
+
     }
+    private void FixedUpdate()
+    {
+        if(backingUp)
+        {
+            rb.AddForce(-transform.forward * (moveSpeed * 0.1f), ForceMode.Acceleration);
+        }
+        else
+        {
+            rb.AddForce(transform.forward * moveSpeed, ForceMode.Acceleration);
+        }
+    }
+
+    public void DetectCollision()
+    {
+        backingUp = true;
+    }
+        
 }

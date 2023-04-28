@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 2197866340820469148}
   - component: {fileID: 2084994228510883024}
   - component: {fileID: 5117720696578043399}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: coffe_shop
   m_TagString: Untagged
   m_Icon: {fileID: 0}

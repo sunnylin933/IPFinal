@@ -4,28 +4,31 @@ using UnityEngine;
 
 public class CarScript : MonoBehaviour
 {
-    public static CarScript instance; 
+    public static CarScript instance;
 
     public Rigidbody sphereRB;
     public Rigidbody carRB;
 
-    public float moveSpeed;
-    public float reverseSpeed;
+    public float maxFwdSpeed = 150f;
+    public float fwdSpeed = 0f;
+    public float fwdAccel = 150f;
     public float turnSpeed;
     public LayerMask groundLayer;
 
     float moveInput;
-    [HideInInspector] public float moveModifier;
+    [HideInInspector] public float moveBase;
     float turnInput;
-    bool isGrounded;
+    public bool isGrounded;
 
     private float normalDrag;
     public float modifiedDrag;
     public float alignToGroundTime;
+    public float turnModifier;
+
     // Start is called before the first frame update
     private void Awake()
     {
-        if(instance == null)
+        if (instance == null)
         {
             instance = this;
         }
@@ -46,15 +49,44 @@ public class CarScript : MonoBehaviour
     void Update()
     {
         moveInput = Input.GetAxisRaw("Vertical");
-        if(moveInput == 0 )
+        //Forcibly push player forward
+        moveInput = moveInput == 0 ? 1 : moveInput;
+        moveBase = moveInput;
+        if (moveInput > 0)
         {
-            moveInput = 1;
-            moveModifier = moveInput;
-        }
-        turnInput = Input.GetAxisRaw("Horizontal");
+            if(fwdSpeed < 0)
+            {
+                fwdSpeed = 0;
+            }
 
-        float newRotation = turnInput * turnSpeed * Time.deltaTime * moveModifier;
-        if(isGrounded)
+            if (fwdSpeed < maxFwdSpeed)
+            {
+                fwdSpeed += Time.deltaTime * fwdAccel;
+            }
+            else
+            {
+                fwdSpeed = maxFwdSpeed;
+            }
+        }
+        else
+        {
+            if (fwdSpeed > 0)
+            {
+                fwdSpeed = 0;
+            }
+
+            if (fwdSpeed >= -maxFwdSpeed)
+            {
+                fwdSpeed -= Time.deltaTime * fwdAccel;
+            }
+        }
+
+        turnInput = Input.GetAxisRaw("Horizontal");
+        turnModifier = Vector3.Distance(sphereRB.velocity, Vector3.zero)/25f;
+        turnModifier = turnModifier > 1 ? 1 : turnModifier;
+
+        float newRotation = turnInput * turnSpeed * Time.deltaTime * moveInput * turnModifier;
+        if (isGrounded)
         {
             transform.Rotate(0, newRotation, 0, Space.World);
         }
@@ -66,19 +98,17 @@ public class CarScript : MonoBehaviour
         Quaternion toRotateTo = Quaternion.FromToRotation(transform.up, hit.normal) * transform.rotation;
         transform.rotation = Quaternion.Slerp(transform.rotation, toRotateTo, alignToGroundTime * Time.deltaTime);
 
-        moveInput *= moveSpeed > 0 ? moveSpeed : reverseSpeed;
+        moveInput *= Mathf.Abs(fwdSpeed);
         if (turnInput != 0)
         {
             moveInput *= 0.85f;
         }
         sphereRB.drag = isGrounded ? normalDrag : modifiedDrag;
-
-        sphereRB.transform.rotation = transform.rotation;
     }
 
     private void FixedUpdate()
     {
-        if(isGrounded)
+        if (isGrounded)
         {
             sphereRB.AddForce(transform.forward * moveInput, ForceMode.Acceleration);
         }
@@ -88,4 +118,6 @@ public class CarScript : MonoBehaviour
         }
         carRB.MoveRotation(transform.rotation);
     }
+
+
 }

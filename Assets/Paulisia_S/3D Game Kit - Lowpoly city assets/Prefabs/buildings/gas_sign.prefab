@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 5836704056579907940}
   - component: {fileID: 8567205640732546478}
   - component: {fileID: 6300126576425970670}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: gas_sign
   m_TagString: Untagged
   m_Icon: {fileID: 0}
