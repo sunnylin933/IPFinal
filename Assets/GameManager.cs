@@ -8,6 +8,7 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
     public GameObject[] spawnPoints;
+
     [SerializeField] TextMeshProUGUI survivalScore;
     float survivalTime = 0;
     // Start is called before the first frame update
@@ -31,23 +32,12 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        survivalTime += Time.deltaTime;
-        print(survivalTime);
+        survivalTime = survivalTime += Time.deltaTime;
         survivalScore.text = survivalTime.ToString();
-    }
-
-    public void RebuildNavmesh(NavMeshSurface surface)
-    {
-        NavMesh.AddNavMeshData(surface.navMeshData);
     }
 
     public void RecheckSpawns()
     {
         spawnPoints = GameObject.FindGameObjectsWithTag("Spawn");
     }
-
-    /*public void RecheckSpawnsDelayed()
-    {
-        Invoke("RecheckSpawns", 0.1f);
-    }*/
 }

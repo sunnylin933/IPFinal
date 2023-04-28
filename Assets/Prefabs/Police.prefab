@@ -27,7 +27,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 141158744}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.58823526, z: 2.9411764}
+  m_LocalPosition: {x: 0, y: 1.1941175, z: 3.5135295}
   m_LocalScale: {x: 2, y: 0.5, z: 2}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -223,7 +223,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerCar: {fileID: 0}
   moveSpeed: 200
-  rotationSpeed: 3
+  rotationSpeed: 5
   backingUpTime: 1.5
 --- !u!1 &3030903957769961064
 GameObject:

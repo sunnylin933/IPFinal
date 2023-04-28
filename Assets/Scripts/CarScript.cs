@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class CarScript : MonoBehaviour
@@ -48,10 +49,12 @@ public class CarScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        ///Movement
         moveInput = Input.GetAxisRaw("Vertical");
         //Forcibly push player forward
         moveInput = moveInput == 0 ? 1 : moveInput;
         moveBase = moveInput;
+
         if (moveInput > 0)
         {
             if(fwdSpeed < 0)
@@ -81,7 +84,13 @@ public class CarScript : MonoBehaviour
             }
         }
 
+        if (Vector3.Distance(sphereRB.velocity, Vector3.zero) < 0.1f && fwdSpeed > 80f)
+        {
+            fwdSpeed = 0;
+        }
+
         turnInput = Input.GetAxisRaw("Horizontal");
+        //Prevents turning if not moving
         turnModifier = Vector3.Distance(sphereRB.velocity, Vector3.zero)/25f;
         turnModifier = turnModifier > 1 ? 1 : turnModifier;
 
@@ -94,9 +103,6 @@ public class CarScript : MonoBehaviour
 
         RaycastHit hit;
         isGrounded = Physics.Raycast(transform.position, -transform.up, out hit, 1f, groundLayer);
-
-        Quaternion toRotateTo = Quaternion.FromToRotation(transform.up, hit.normal) * transform.rotation;
-        transform.rotation = Quaternion.Slerp(transform.rotation, toRotateTo, alignToGroundTime * Time.deltaTime);
 
         moveInput *= Mathf.Abs(fwdSpeed);
         if (turnInput != 0)
@@ -118,6 +124,4 @@ public class CarScript : MonoBehaviour
         }
         carRB.MoveRotation(transform.rotation);
     }
-
-
 }

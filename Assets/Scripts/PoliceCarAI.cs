@@ -1,8 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.AI;
-using UnityEngine.UIElements;
+
 
 public class PoliceCarAI : MonoBehaviour
 {
@@ -21,7 +20,9 @@ public class PoliceCarAI : MonoBehaviour
 
     private void Update()
     {
+        transform.position = new Vector3(transform.position.x, 0, transform.position.z);
         Vector3 targetDirection = (playerCar.position - transform.position).normalized;
+        targetDirection.y = 0f;
         Quaternion targetRotation = Quaternion.LookRotation(targetDirection);
         transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
 
@@ -36,6 +37,7 @@ public class PoliceCarAI : MonoBehaviour
             {
                 backingUpTimer += Time.deltaTime;
                 transform.Rotate(Vector3.up, Space.World);
+
             }
         }
 
