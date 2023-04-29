@@ -74,10 +74,4 @@ public class tileGeneration : MonoBehaviour
         Gizmos.color = Color.red;
         Gizmos.DrawWireCube(transform.position, transform.localScale);
     }
-
-    private void OnDestroy()
-    {
-
-    }
-
 }

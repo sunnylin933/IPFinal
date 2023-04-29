@@ -193,7 +193,7 @@ MonoBehaviour:
   maxFwdSpeed: 160
   fwdSpeed: 0
   fwdAccel: 40
-  rotationSpeed: 5
+  rotationSpeed: 6
   backingUpTime: 2
   motorRB: {fileID: 2291898013612476113}
   colliderRB: {fileID: 2291898013591615032}
@@ -222,7 +222,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 1
-  m_Volume: 1
+  m_Volume: 0.75
   m_Pitch: 1
   Loop: 0
   Mute: 0

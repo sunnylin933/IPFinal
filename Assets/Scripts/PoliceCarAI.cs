@@ -71,12 +71,18 @@ public class PoliceCarAI : MonoBehaviour
             }
         }
 
+        if(Vector3.Distance(transform.position, playerCar.transform.position) > 300f)
+        {
+            Destroy(gameObject);
+        }
+
+
     }
     private void FixedUpdate()
     {
         if(backingUp)
         {
-            motorRB.AddForce(-transform.forward * (fwdSpeed * 0.1f), ForceMode.Acceleration);
+            motorRB.AddForce(-transform.forward * fwdSpeed, ForceMode.Acceleration);
         }
         else
         {

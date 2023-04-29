@@ -4,6 +4,7 @@ using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -16,11 +17,16 @@ public class GameManager : MonoBehaviour
     [SerializeField] float maxSpawnDistance;
     public List<GameObject> spawnPoints;
     public List<GameObject> validSpawns;
+    [SerializeField] GameObject[] policeCars;
+    float spawnTimer = 0;
+    [SerializeField] float spawnTime;
 
     [Header("Scoring")]
     [SerializeField] GameObject startButton;
+    [SerializeField] GameObject restartButton;
     [SerializeField] TextMeshProUGUI survivalScore;
     [SerializeField] TextMeshProUGUI bustedScene;
+    [SerializeField] TextMeshProUGUI finalScore;
     public float survivalTime = 0;
     [SerializeField] bool isPlaying = true;
     public bool isStarted = false;
@@ -39,7 +45,7 @@ public class GameManager : MonoBehaviour
     }
     void Start()
     {
-        spawnPoints = new List<GameObject>(GameObject.FindGameObjectsWithTag("Spawn"));
+        spawnPoints = new List<GameObject>();
         validSpawns = new List<GameObject>();
     }
 
@@ -48,16 +54,6 @@ public class GameManager : MonoBehaviour
     {
         if(isStarted)
         {
-            if (isPlaying)
-            {
-                survivalTime = survivalTime += Time.deltaTime;
-                survivalScore.text = survivalTime.ToString("0.00") + " sec";
-            }
-            else
-            {
-
-            }
-
             foreach (GameObject spawnPoint in spawnPoints.ToList())
             {
                 if (spawnPoint != null)
@@ -84,9 +80,26 @@ public class GameManager : MonoBehaviour
                     if (validSpawns.Contains(spawnPoint)) validSpawns.Remove(spawnPoint);
                 }
             }
+            if (isPlaying)
+            {
+                survivalTime = survivalTime += Time.deltaTime;
+                survivalScore.text = survivalTime.ToString("0.00") + " sec";
 
-            SpawnPolice();
-        } 
+                if(spawnTimer > spawnTime)
+                {
+                    SpawnPolice();
+                    spawnTimer = 0;
+                }
+                else
+                {
+                    spawnTimer += Time.deltaTime;
+                }
+            }
+        }
+        else
+        {
+            
+        }
     }
 
     private void LateUpdate()
@@ -111,7 +124,16 @@ public class GameManager : MonoBehaviour
 
     public void SpawnPolice()
     {
-
+        var randomInt = Random.Range(0, validSpawns.Count);
+        if (survivalTime < 35f)
+        {
+            Instantiate(policeCars[0], validSpawns[randomInt].transform.position, Quaternion.identity);
+        }
+        else
+        {
+            var randomCar = Random.Range(0, 2);
+            Instantiate(policeCars[randomCar], validSpawns[randomInt].transform.position, Quaternion.identity);
+        }
     }
 
     public void Busted()
@@ -119,6 +141,14 @@ public class GameManager : MonoBehaviour
         player.GetComponent<CarScript>().enabled = false;
         isPlaying = false;
         bustedScene.gameObject.SetActive(true);
+        survivalScore.gameObject.SetActive(false);
+        restartButton.SetActive(true);
+        finalScore.text = "<color=#FFFFFF> Your final score: </color>" + survivalTime.ToString("0.00") + " sec"; 
         print("Busted!");
+    }
+
+    public void Restart()
+    {
+        SceneManager.LoadScene(0);
     }
 }
