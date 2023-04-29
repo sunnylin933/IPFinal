@@ -15,12 +15,4 @@ public class CollisionDetection : MonoBehaviour
     {
         transform.rotation = transform.parent.rotation;
     }
-
-    private void OnTriggerEnter(Collider other)
-    {
-        if(other.gameObject.layer == LayerMask.NameToLayer("Obstacle"))
-        {
-            transform.parent.GetComponent<PoliceCarAI>().DetectCollision();
-        }
-    }
 }

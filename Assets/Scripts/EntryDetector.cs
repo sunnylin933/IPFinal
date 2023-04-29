@@ -7,9 +7,10 @@ public class EntryDetector : MonoBehaviour
     [SerializeField] int ID;
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player"))
+        if (other.gameObject.layer == LayerMask.NameToLayer("Car"))
         {
             this.transform.parent.transform.parent.GetComponent<tileGeneration>().DetectSpawn(ID);
         }
+
     }
 }

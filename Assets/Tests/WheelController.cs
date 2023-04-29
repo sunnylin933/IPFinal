@@ -40,14 +40,12 @@ public class WheelController : MonoBehaviour
             anim.SetBool("turningRight", false);
         }
 
-
-        foreach (var trail in trails)
+        if (horizontalAxis != 0)
         {
-            trail.emitting = true;
-        }
-        /*if (horizontalAxis != 0)
-        {
-            
+            foreach (var trail in trails)
+            {
+                trail.emitting = true;
+            }
         }
         else
         {
@@ -55,6 +53,6 @@ public class WheelController : MonoBehaviour
             {
                 trail.emitting = false;
             }
-        }*/
+        }
     }
 }

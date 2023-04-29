@@ -5,11 +5,10 @@ using UnityEngine;
 
 public class CarScript : MonoBehaviour
 {
-    public static CarScript instance;
-
     [Header("Movement")]
     public Rigidbody sphereRB;
     public Rigidbody carRB;
+    public static CarScript instance;
 
     public float maxFwdSpeed = 150f;
     public float fwdSpeed = 0f;
@@ -54,90 +53,108 @@ public class CarScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        ///Movement
-        moveInput = Input.GetAxisRaw("Vertical");
-        //Forcibly push player forward
-        moveInput = moveInput == 0 ? 1 : moveInput;
-        moveBase = moveInput;
-
-        if (moveInput > 0)
+        if(GameManager.instance.isStarted)
         {
-            if(fwdSpeed < 0)
-            {
-                fwdSpeed = 0;
-            }
+            ///Movement
+            moveInput = Input.GetAxisRaw("Vertical");
+            //Forcibly push player forward
+            moveInput = moveInput == 0 ? 1 : moveInput;
+            moveBase = moveInput;
 
-            if (fwdSpeed < maxFwdSpeed)
+            if (moveInput > 0)
             {
-                fwdSpeed += Time.deltaTime * fwdAccel;
+                if (fwdSpeed < 0)
+                {
+                    fwdSpeed = 0;
+                }
+
+                if (fwdSpeed < maxFwdSpeed)
+                {
+                    fwdSpeed += Time.deltaTime * fwdAccel;
+                }
+                else
+                {
+                    fwdSpeed = maxFwdSpeed;
+                }
             }
             else
             {
-                fwdSpeed = maxFwdSpeed;
+                if (fwdSpeed > 0)
+                {
+                    fwdSpeed = 0;
+                }
+
+                if (fwdSpeed >= -maxFwdSpeed)
+                {
+                    fwdSpeed -= Time.deltaTime * fwdAccel;
+                }
             }
-        }
-        else
-        {
-            if (fwdSpeed > 0)
+
+            if (Vector3.Distance(sphereRB.velocity, Vector3.zero) < 0.1f && fwdSpeed > 120f)
             {
                 fwdSpeed = 0;
             }
 
-            if (fwdSpeed >= -maxFwdSpeed)
+            turnInput = Input.GetAxisRaw("Horizontal");
+            //Prevents turning if not moving
+            turnModifier = Vector3.Distance(sphereRB.velocity, Vector3.zero) / 25f;
+            turnModifier = turnModifier > 1 ? 1 : turnModifier;
+
+            float newRotation = turnInput * turnSpeed * Time.deltaTime * moveInput * turnModifier;
+            if (isGrounded)
             {
-                fwdSpeed -= Time.deltaTime * fwdAccel;
+                transform.Rotate(0, newRotation, 0, Space.World);
             }
-        }
+            transform.position = sphereRB.transform.position;
 
-        if (Vector3.Distance(sphereRB.velocity, Vector3.zero) < 0.1f && fwdSpeed > 80f)
-        {
-            fwdSpeed = 0;
-        }
+            RaycastHit hit;
+            isGrounded = Physics.Raycast(transform.position, -transform.up, out hit, 1f, groundLayer);
 
-        turnInput = Input.GetAxisRaw("Horizontal");
-        //Prevents turning if not moving
-        turnModifier = Vector3.Distance(sphereRB.velocity, Vector3.zero)/25f;
-        turnModifier = turnModifier > 1 ? 1 : turnModifier;
-
-        float newRotation = turnInput * turnSpeed * Time.deltaTime * moveInput * turnModifier;
-        if (isGrounded)
-        {
-            transform.Rotate(0, newRotation, 0, Space.World);
-        }
-        transform.position = sphereRB.transform.position;
-
-        RaycastHit hit;
-        isGrounded = Physics.Raycast(transform.position, -transform.up, out hit, 1f, groundLayer);
-
-        moveInput *= Mathf.Abs(fwdSpeed);
-        if (turnInput != 0)
-        {
-            moveInput *= 0.85f;
-        }
-        sphereRB.drag = isGrounded ? normalDrag : modifiedDrag;
+            moveInput *= Mathf.Abs(fwdSpeed);
+            if (turnInput != 0)
+            {
+                moveInput *= 0.85f;
+            }
+            sphereRB.drag = isGrounded ? normalDrag : modifiedDrag;
 
 
-        ///Scoring
-        if (Vector3.Distance(sphereRB.velocity, Vector3.zero) < 0.1f)
-        {
-            timePinned += Time.deltaTime;
+            ///Scoring
+            if (Vector3.Distance(sphereRB.velocity, Vector3.zero) < 5f)
+            {
+                timePinned += Time.deltaTime;
+                //print(timePinned);
+            }
+            else
+            {
+                if (timePinned > 0) timePinned = 0;
+            }
+
+            if (timePinned > pinMax) GameManager.instance.Busted();
         }
         else
         {
-            if(timePinned > 0) timePinned = 0;
+            transform.position = sphereRB.transform.position;
         }
+        
     }
 
     private void FixedUpdate()
     {
-        if (isGrounded)
+        if(GameManager.instance.isStarted)
         {
-            sphereRB.AddForce(transform.forward * moveInput, ForceMode.Acceleration);
+            if (isGrounded)
+            {
+                sphereRB.AddForce(transform.forward * moveInput, ForceMode.Acceleration);
+            }
+            else
+            {
+                sphereRB.AddForce(transform.up * -40f);
+            }
+            carRB.MoveRotation(transform.rotation);
         }
         else
         {
-            sphereRB.AddForce(transform.up * -40f);
+            sphereRB.AddForce(transform.forward * 500f, ForceMode.Force);
         }
-        carRB.MoveRotation(transform.rotation);
     }
 }

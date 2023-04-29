@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
-
 
 public class PoliceCarAI : MonoBehaviour
 {
@@ -13,20 +13,24 @@ public class PoliceCarAI : MonoBehaviour
     bool backingUp = false;
     [SerializeField] float backingUpTime;
     float backingUpTimer = 0f;
-    Rigidbody rb;
+    [SerializeField] Rigidbody motorRB;
+    [SerializeField] Rigidbody colliderRB;
 
     private void Start()
     {
-        rb = GetComponent<Rigidbody>();
+        motorRB.transform.parent = null;
+        colliderRB.transform.parent = null;
+        playerCar = GameObject.FindGameObjectWithTag("Player").transform;
     }
 
     private void Update()
     {
-        transform.position = new Vector3(transform.position.x, 0, transform.position.z);
+        transform.position = new Vector3(transform.position.x, 0.5f, transform.position.z);
         Vector3 targetDirection = (playerCar.position - transform.position).normalized;
         targetDirection.y = 0f;
         Quaternion targetRotation = Quaternion.LookRotation(targetDirection);
         transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+        transform.position = motorRB.transform.position;
 
         if (backingUp)
         {
@@ -72,17 +76,21 @@ public class PoliceCarAI : MonoBehaviour
     {
         if(backingUp)
         {
-            rb.AddForce(-transform.forward * (fwdSpeed * 0.1f), ForceMode.Acceleration);
+            motorRB.AddForce(-transform.forward * (fwdSpeed * 0.1f), ForceMode.Acceleration);
         }
         else
         {
-            rb.AddForce(transform.forward * fwdSpeed, ForceMode.Acceleration);
+            motorRB.AddForce(transform.forward * fwdSpeed, ForceMode.Acceleration);
+        }
+        colliderRB.MoveRotation(transform.rotation);
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if(other.gameObject.layer == LayerMask.NameToLayer("Obstacle"))
+        {
+            backingUp = true;
         }
     }
 
-    public void DetectCollision()
-    {
-        backingUp = true;
-    }
-        
 }

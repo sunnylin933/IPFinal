@@ -18,8 +18,12 @@ public class GameManager : MonoBehaviour
     public List<GameObject> validSpawns;
 
     [Header("Scoring")]
+    [SerializeField] GameObject startButton;
     [SerializeField] TextMeshProUGUI survivalScore;
+    [SerializeField] TextMeshProUGUI bustedScene;
     public float survivalTime = 0;
+    [SerializeField] bool isPlaying = true;
+    public bool isStarted = false;
     // Start is called before the first frame update
 
     private void Awake()
@@ -42,37 +46,47 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        survivalTime = survivalTime += Time.deltaTime;
-        survivalScore.text = survivalTime.ToString("0.00");
-
-        foreach (GameObject spawnPoint in spawnPoints.ToList())
+        if(isStarted)
         {
-            if (spawnPoint != null)
+            if (isPlaying)
             {
-                var dist = Vector3.Distance(spawnPoint.transform.position, player.transform.position);
-                if (dist <= maxSpawnDistance && dist >= minSpawnDistance)
+                survivalTime = survivalTime += Time.deltaTime;
+                survivalScore.text = survivalTime.ToString("0.00") + " sec";
+            }
+            else
+            {
+
+            }
+
+            foreach (GameObject spawnPoint in spawnPoints.ToList())
+            {
+                if (spawnPoint != null)
                 {
-                    if(!validSpawns.Contains(spawnPoint))
+                    var dist = Vector3.Distance(spawnPoint.transform.position, player.transform.position);
+                    if (dist <= maxSpawnDistance && dist >= minSpawnDistance)
                     {
-                        validSpawns.Add(spawnPoint);
+                        if (!validSpawns.Contains(spawnPoint))
+                        {
+                            validSpawns.Add(spawnPoint);
+                        }
+                    }
+                    else
+                    {
+                        if (validSpawns.Contains(spawnPoint))
+                        {
+                            validSpawns.Remove(spawnPoint);
+                        }
                     }
                 }
                 else
                 {
-                    if (validSpawns.Contains(spawnPoint))
-                    {
-                        validSpawns.Remove(spawnPoint);
-                    }
+                    spawnPoints.Remove(spawnPoint);
+                    if (validSpawns.Contains(spawnPoint)) validSpawns.Remove(spawnPoint);
                 }
             }
-            else
-            {
-                spawnPoints.Remove(spawnPoint);
-                if(validSpawns.Contains(spawnPoint)) validSpawns.Remove(spawnPoint);
-            }
-        }
 
-        SpawnPolice();
+            SpawnPolice();
+        } 
     }
 
     private void LateUpdate()
@@ -88,8 +102,23 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public void StartGame()
+    {
+        isStarted = true;
+        survivalScore.gameObject.SetActive(true);
+        startButton.SetActive(false);
+    }
+
     public void SpawnPolice()
     {
 
+    }
+
+    public void Busted()
+    {
+        player.GetComponent<CarScript>().enabled = false;
+        isPlaying = false;
+        bustedScene.gameObject.SetActive(true);
+        print("Busted!");
     }
 }

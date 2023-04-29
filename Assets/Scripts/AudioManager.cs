@@ -16,7 +16,7 @@ public class AudioManager : MonoBehaviour
 
     private void Update()
     {
-        if(!isPlaying)
+        if(!isPlaying && GameManager.instance.isStarted)
         {
             if (timer >= timerTotal)
             {
@@ -33,7 +33,7 @@ public class AudioManager : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        if (!Mathf.Approximately(manager.volume,0.35f) && isPlaying)
+        if (!Mathf.Approximately(manager.volume,0.35f) && isPlaying && GameManager.instance.isStarted)
         {
             manager.volume = Mathf.Lerp(manager.volume, 0.35f, 0.005f);
         }
