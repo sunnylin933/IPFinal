@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 1051660202492166378}
   m_Layer: 10
   m_Name: bus_stop_sign
-  m_TagString: Untagged
+  m_TagString: Obstacle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

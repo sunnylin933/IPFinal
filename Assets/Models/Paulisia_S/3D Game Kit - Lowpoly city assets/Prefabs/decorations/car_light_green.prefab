@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: -3275339640186414219}
   m_Layer: 10
   m_Name: car_light_green
-  m_TagString: Untagged
+  m_TagString: Obstacle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

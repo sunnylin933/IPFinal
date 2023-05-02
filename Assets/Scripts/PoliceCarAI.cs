@@ -93,10 +93,23 @@ public class PoliceCarAI : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if(other.gameObject.layer == LayerMask.NameToLayer("Obstacle"))
+        if (other.CompareTag("Obstacle")) //|| other.gameObject.layer == LayerMask.NameToLayer("Obstacle"))
         {
+            print("Collision detected");
             backingUp = true;
         }
     }
 
+    private void OnDestroy()
+    {
+        if(motorRB != null) 
+        {
+            Destroy(motorRB.gameObject);
+        }
+
+        if (colliderRB != null)
+        {
+            Destroy(colliderRB.gameObject);
+        }
+    }
 }
